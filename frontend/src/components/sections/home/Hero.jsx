@@ -13,8 +13,13 @@ const SvgClipPath = () => (
   </svg>
 );
 
-const HeroSection = () => {
+const HeroSection = ({ data }) => {
   const [bgImage, setBgImage] = useState("/herosectionimage.jpg");
+
+  // Fallbacks
+  const motto = data?.motto || "Empowering Lives Through Education";
+  const quote = data?.quote || "Education is the most powerful weapon you can use to change the world";
+  const quoteBy = data?.quoteWrittenBy || "Nelson Mandela";
 
   useEffect(() => {
     const fetchHeroImage = async () => {
@@ -38,12 +43,11 @@ const HeroSection = () => {
           <div className="max-w-lg">
             <span className="text-orange-500 text-xl font-semibold tracking-wider flex items-center justify-center lg:justify-start gap-2">
               <span className="text-[#E57C23] text-2xl">♡</span>
-              Empowering Lives Through Education
+              {motto}
             </span>
 
             <h1 className="text-2xl md:text-4xl lg:text-3xl font-bold my-6 leading-tight text-white text-center lg:text-left">
-              Education is the most powerful weapon you can use to change the
-              world <span className="font-light italic">– Nelson Mandela</span>
+              {quote} <span className="font-light italic">– {quoteBy}</span>
             </h1>
           </div>
         </div>

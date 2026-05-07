@@ -8,29 +8,35 @@ import JnanaShala from "../../../assets/home/FlagshipPrograms_images/Project_Jna
 import others from "../../../assets/home/FlagshipPrograms_images/Other_Programs.webp";
 import sulabhapp from "../../../assets/home/FlagshipPrograms_images/sulabhapp.webp";
 
-export default function FlagshipPrograms() {
-  const programs = [
+import { API_BASE_URL } from "../../../utils/constants";
+
+export default function FlagshipPrograms({ data }) {
+  const sectionTitle = data?.sectionTitle || "Know More About Our Flagship Programs";
+  
+  const defaultPrograms = [
     {
       image: sharada,
       title: "Sharada Academy",
-      desc: "A structured learning initiative that supports after-school academics.",
+      subtitle: "A structured learning initiative that supports after-school academics.",
     },
     {
       image: sulabhapp,
       title: "Project Sulabh",
-      desc: "An ed-tech and community empowerment programme: online spoken English and soft-skills courses. ",
+      subtitle: "An ed-tech and community empowerment programme: online spoken English and soft-skills courses. ",
     },
     {
       image: JnanaShala,
       title: "Project JnanaShala",
-      desc: "A school-support programme that provides library kits, digital learning tools, etc.",
+      subtitle: "A school-support programme that provides library kits, digital learning tools, etc.",
     },
     {
       image: others,
       title: "Others",
-      desc: "Many other programmes which help the students grow.",
+      subtitle: "Many other programmes which help the students grow.",
     },
   ];
+
+  const displayPrograms = (data?.programs && data.programs.length > 0) ? data.programs : defaultPrograms;
 
   return (
     <section className="relative bg-[#0a2540] py-12 px-4 md:py-16 md:px-8 lg:px-20">
@@ -41,7 +47,7 @@ export default function FlagshipPrograms() {
             <span className="text-[#E57C23] text-3xl md:text-4xl drop-shadow-md">
               ♡
             </span>
-            <span>Know More About Our Flagship Programs</span>
+            <span>{sectionTitle}</span>
           </h2>
 
           <div className="mt-2 transform hover:scale-105 transition-transform duration-300">
@@ -51,14 +57,20 @@ export default function FlagshipPrograms() {
 
         {/* --- Cards Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-          {programs.map((p, idx) => (
-            <FlagshipCard
-              key={idx}
-              image={p.image}
-              title={p.title}
-              desc={p.desc}
-            />
-          ))}
+          {displayPrograms.map((p, idx) => {
+            const imgSrc = p.image?.startsWith("uploads") 
+                ? `${API_BASE_URL}/${p.image}` 
+                : p.image;
+
+            return (
+              <FlagshipCard
+                key={idx}
+                image={imgSrc}
+                title={p.title}
+                desc={p.subtitle || p.desc}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

@@ -27,10 +27,11 @@ import TestimonialsManagement from "./dashboardComponents/TestimonialDashboard/T
 import ProgramManagement from "./dashboardComponents/ProgramManagement";
 import PartnerManagement from "./dashboardComponents/PartnerManagement";
 import SulabhManagement from "./dashboardComponents/SulabhManagement";
-import HeroImageManagement from "./dashboardComponents/HeroImageManagement"; // Added import
+import HeroImageManagement from "./dashboardComponents/HeroImageManagement";
+import HomeManagement from "./dashboardComponents/HomeManagement";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("members");
+  const [activeTab, setActiveTab] = useState(localStorage.getItem("adminActiveTab") || "members");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
@@ -39,6 +40,7 @@ const Dashboard = () => {
   };
 
   const navItems = [
+    { id: "home-management", label: "Home Page", icon: Home },
     { id: "members", label: "Team Management", icon: Users },
     { id: "blogs", label: "Blog Management", icon: BookOpen },
     { id: "education-images", label: "Education Images", icon: Image },
@@ -69,7 +71,9 @@ const Dashboard = () => {
       case "sulabh":
         return <SulabhManagement />;
       case "hero-images":
-        return <HeroImageManagement />; // Added case
+        return <HeroImageManagement />;
+      case "home-management":
+        return <HomeManagement />;
       default:
         return <TeamManagement />;
     }
@@ -119,6 +123,7 @@ const Dashboard = () => {
                 key={item.id}
                 onClick={() => {
                   setActiveTab(item.id);
+                  localStorage.setItem("adminActiveTab", item.id);
                   setIsSidebarOpen(false);
                 }}
                 className={`

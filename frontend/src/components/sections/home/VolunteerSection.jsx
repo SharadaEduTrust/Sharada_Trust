@@ -3,12 +3,40 @@ import { Heart, ChevronDown } from "lucide-react";
 import volunteerBackgroundImage from "../../../assets/volunteer.webp";
 import OrangeButton from "../../common/buttons/OrangeButton";
 
-export default function VolunteerComponent() {
+import { API_BASE_URL } from "../../../utils/constants";
+
+export default function VolunteerComponent({ data }) {
   const [expandedSection, setExpandedSection] = useState("");
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? "" : section);
   };
+
+  // Fallbacks
+  const title = data?.title || "Why we need You to Volunteer with Us";
+  const subtitle = data?.subtitle || "We need more Volunteers like these inspiring youngsters, eager to create real change in the world!";
+  const boldSubtitle = data?.boldSubtitle || "Young, Driven & Making a Difference!";
+  const image = data?.image ? `${API_BASE_URL}/${data.image}` : volunteerBackgroundImage;
+  
+  const defaultAccordion = [
+    {
+      id: "recognition",
+      title: "Recognition and Fulfillment",
+      description: "We need more passionate change-makers and young minds ready to shape a more inclusive and empowered future for education in India.",
+    },
+    {
+      id: "community",
+      title: "Be Part of a Community",
+      description: "Join a vibrant network of Volunteers who share your passion for education and social change, creating lasting impact together.",
+    },
+    {
+      id: "why-join",
+      title: "Why Join Us as a Volunteer?",
+      description: "Make a tangible impact on education, develop leadership skills, connect with like-minded change makers, and be part of a movement transforming communities across India.",
+    },
+  ];
+
+  const accordionItems = (data?.accordion && data.accordion.length > 0) ? data.accordion : defaultAccordion;
 
   return (
     <div className="bg-gray-100 px-4 sm:px-6 md:px-8 py-12">
@@ -20,8 +48,8 @@ export default function VolunteerComponent() {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-2xl rotate-2"></div>
               <div className="relative bg-white p-2 rounded-2xl">
                 <img
-                  src={volunteerBackgroundImage}
-                  alt="Young volunteers in front of educational board"
+                  src={image}
+                  alt="Young volunteers"
                   className="rounded-xl w-full h-auto object-cover"
                 />
               </div>
@@ -37,135 +65,58 @@ export default function VolunteerComponent() {
           <div className="p-6 sm:p-8 md:p-12 flex flex-col justify-center">
             {/* -------- Header -------- */}
             <div className="mb-6">
-              {/* <span className="inline-flex items-center gap-2 text-orange-500 mb-3">
-                <Heart className="w-5 h-5 fill-current leading-none" />
-                <span className="font-semibold text-lg leading-tight">
-                  Join us
-                </span>
-              </span> */}
-
               <h1 className="text-3xl sm:text-4xl md:text-4xl font-bold text-[#0B0B45] leading-tight mb-4">
-                Why we need You to Volunteer with Us
+                {title}
               </h1>
 
               <p className=" text-base sm:text-md leading-relaxed text-[#0B0B45]">
-                We need more Volunteers like these inspiring youngsters, eager
-                to create real change in the world!
+                {subtitle}
                 <br />
                 <span className="font-semibold md:text-1xl text-[#0B0B45]">
-                  Young, Driven & Making a Difference!
+                  {boldSubtitle}
                 </span>
               </p>
             </div>
 
             {/* -------- Accordion -------- */}
             <div className="space-y-4">
-              {/* Recognition */}
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => toggleSection("recognition")}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <span
-                    className={`text-lg sm:text-xl font-semibold ${
-                      expandedSection === "recognition"
-                        ? "text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  >
-                    Recognition and Fulfillment
-                  </span>
+              {accordionItems.map((item, index) => {
+                const itemId = item.id || `item-${index}`;
+                return (
+                  <div key={itemId} className="border border-gray-200 rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => toggleSection(itemId)}
+                      className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-gray-50 transition-colors"
+                    >
+                      <span
+                        className={`text-lg sm:text-xl font-semibold ${
+                          expandedSection === itemId
+                            ? "text-orange-500"
+                            : "text-[#0B0B45]"
+                        }`}
+                      >
+                        {item.title}
+                      </span>
 
-                  <ChevronDown
-                    className={`w-5 h-5 transition-transform ${
-                      expandedSection === "recognition"
-                        ? "rotate-180 text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  />
-                </button>
+                      <ChevronDown
+                        className={`w-5 h-5 transition-transform ${
+                          expandedSection === itemId
+                            ? "rotate-180 text-orange-500"
+                            : "text-[#0B0B45]"
+                        }`}
+                      />
+                    </button>
 
-                {expandedSection === "recognition" && (
-                  <div className="px-4 sm:px-5 pb-5 pt-2">
-                    <p className="text-gray-700 leading-relaxed">
-                      We need more passionate change-makers and young minds
-                      ready to shape a more inclusive and empowered future for
-                      education in India.
-                    </p>
+                    {expandedSection === itemId && (
+                      <div className="px-4 sm:px-5 pb-5 pt-2">
+                        <p className="text-gray-700 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-
-              {/* Community */}
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => toggleSection("community")}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <span
-                    className={`text-lg sm:text-xl font-semibold ${
-                      expandedSection === "community"
-                        ? "text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  >
-                    Be Part of a Community
-                  </span>
-
-                  <ChevronDown
-                    className={`w-5 h-5 transition-transform ${
-                      expandedSection === "community"
-                        ? "rotate-180 text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  />
-                </button>
-
-                {expandedSection === "community" && (
-                  <div className="px-4 sm:px-5 pb-5 pt-2">
-                    <p className="text-gray-700 leading-relaxed">
-                      Join a vibrant network of Volunteers who share your
-                      passion for education and social change, creating lasting
-                      impact together.
-                    </p>
-                  </div>
-                )}
-              </div>
-              {/* Why Join */}
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => toggleSection("why-join")}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <span
-                    className={`text-lg sm:text-xl font-semibold ${
-                      expandedSection === "why-join"
-                        ? "text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  >
-                    Why Join Us as a Volunteer?
-                  </span>
-
-                  <ChevronDown
-                    className={`w-5 h-5 transition-transform ${
-                      expandedSection === "why-join"
-                        ? "rotate-180 text-orange-500"
-                        : "text-[#0B0B45]"
-                    }`}
-                  />
-                </button>
-
-                {expandedSection === "why-join" && (
-                  <div className="px-4 sm:px-5 pb-5 pt-2">
-                    <p className="text-gray-700 leading-relaxed">
-                      Make a tangible impact on education, develop leadership
-                      skills, connect with like-minded change makers, and be
-                      part of a movement transforming communities across India.
-                    </p>
-                  </div>
-                )}
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>

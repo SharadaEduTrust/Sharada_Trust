@@ -111,4 +111,9 @@ export const heroImagesAPI = {
   update: (page, formData) => api.post(`/api/hero-images/${page}`, formData),
 };
 
+export const homeAPI = {
+  get: () => api.get("/api/home"),
+  update: (formData) => api.put("/api/home", formData),
+};
+
 export default api;

@@ -2,10 +2,23 @@ import React from "react";
 import { Heart, Star } from "lucide-react";
 import qrCodeImage from "../../../assets/QR.webp";
 
-export default function DonationSection() {
-  const qrImage =
-    qrCodeImage ||
-    "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://sharadaeducationaltrust.org";
+import { API_BASE_URL } from "../../../utils/constants";
+
+export default function DonationSection({ data }) {
+  // Fallbacks
+  const title = data?.title || "Together Let's Change The World";
+  const quote = data?.quote || "Donating for an Educational cause is an extremely noble act since the impact lasts a lifetime";
+  const listTitle = data?.listTitle || "Donate now";
+  const points = (data?.points && data.points.length > 0) ? data.points : [
+    "Sharada Educational Trust is registered as a Public Charitable Trust.",
+    "The Trust is registered for undertaking CSR activities.",
+    "Donations are eligible for exemption u/s 80G of Income Tax Act 1961."
+  ];
+  const note = data?.note || "After transfer, please email details (Name, PAN, Address) to info@sharadatrust.org or WhatsApp +91 9019911804.";
+  const upiId = data?.upiId || "sharadaeducationaltrust.ibz@icici";
+  const image = data?.image ? `${API_BASE_URL}/${data.image}` : qrCodeImage;
+
+  const qrImage = image || "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://sharadaeducationaltrust.org";
 
   return (
     <div id="donation" className="w-full px-4 py-6 md:py-8 bg-[#F3F4F6]">
@@ -32,20 +45,13 @@ export default function DonationSection() {
                 <p className="leading-snug text-xs sm:text-sm mb-2">
                   UPI Id:{" "}
                   <span className="font-bold select-all bg-gray-50 px-1 rounded">
-                    sharadaeducationaltrust.ibz@icici
+                    {upiId}
                   </span>
                 </p>
-                <p className="leading-snug text-xs text-gray-600">
-                  After transfer, please email details (Name, PAN, Address) to{" "}
-                  <span className="font-semibold text-[#0B0B45]">
-                    info@sharadatrust.org
-                  </span>{" "}
-                  or WhatsApp{" "}
-                  <span className="font-semibold text-[#0B0B45]">
-                    +91 9019911804
-                  </span>
-                  .
-                </p>
+                <div 
+                  className="leading-snug text-xs text-gray-600 prose-sm"
+                  dangerouslySetInnerHTML={{ __html: note }}
+                />
               </div>
             </div>
 
@@ -61,42 +67,29 @@ export default function DonationSection() {
                 </div>
 
                 <h2 className="text-2xl md:text-4xl font-bold leading-tight mb-4 text-[#0B0B45]">
-                  Together Let's Change The World
+                  {title}
                 </h2>
 
                 <div className="space-y-3 text-sm md:text-base text-[#0B0B45]">
                   <p className="italic leading-snug opacity-90">
-                    "Donating for an Educational cause is an extremely noble act
-                    since the impact lasts a lifetime".
+                    "{quote}".
                   </p>
-                  <p className="font-semibold text-sm">
-                    Please scan the QR code to donate generously.
+                  <p className="font-bold text-sm">
+                    {listTitle}
                   </p>
                 </div>
               </div>
 
               {/* Bullet Points */}
               <div className="space-y-3 text-[#0B0B45]">
-                <div className="flex items-start gap-2">
-                  <Star className="w-4 h-4 fill-current shrink-0 mt-0.5" />
-                  <p className="leading-snug text-xs sm:text-sm">
-                    <span className="font-bold">Sharada Educational Trust</span>{" "}
-                    is registered as a Public Charitable Trust.
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Star className="w-4 h-4 fill-current flex-shrink-0 mt-0.5" />
-                  <p className="leading-snug text-xs sm:text-sm">
-                    The Trust is registered for undertaking CSR activities.
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Star className="w-4 h-4 fill-current flex-shrink-0 mt-0.5" />
-                  <p className="leading-snug text-xs sm:text-sm">
-                    Donations are eligible for exemption u/s 80G of Income Tax
-                    Act 1961.
-                  </p>
-                </div>
+                {points.map((point, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <Star className="w-4 h-4 fill-current shrink-0 mt-0.5" />
+                    <p className="leading-snug text-xs sm:text-sm">
+                      {point}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

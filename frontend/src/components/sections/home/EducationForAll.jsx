@@ -1,16 +1,22 @@
 import React from "react";
 import ImageCard from "../../common/cards/ImageCard";
 import DonationButton from "../../common/buttons/OrangeButton";
+import { API_BASE_URL } from "../../../utils/constants";
 import BackGroundImage from "../../../assets/Background_Image_EducationForAll.jpg";
 
-const EducationForAll = () => {
+const EducationForAll = ({ data }) => {
+  const hashtag = data?.hashtag || "#EDUCATIONFORALL";
+  const bgImg = data?.backgroundImage 
+    ? `${API_BASE_URL}/${data.backgroundImage}` 
+    : BackGroundImage;
+
   return (
     <section className="relative min-h-[70vh] md:min-h-screen w-full overflow-hidden bg-[#FFFBED]">
       {/* Background Image (right side) with curved edge */}
       <div
         className="pointer-events-none absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${BackGroundImage})`,
+          backgroundImage: `url(${bgImg})`,
           // ellipse with percentage radii stays responsive across widths/heights [web:62][web:15]
           clipPath: "ellipse(52% 100% at 100% 50%)",
         }}
@@ -24,7 +30,7 @@ const EducationForAll = () => {
         {/* Header Section */}
         <div className="mb-10 sm:mb-12 max-w-xl">
           <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-orange-500 mb-4 sm:mb-6 tracking-widest">
-            #EDUCATIONFORALL
+            {hashtag}
           </h1>
           {/* <DonationButton work="Make a Donation" path="#donation" /> */}
         </div>
