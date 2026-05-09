@@ -136,6 +136,34 @@ const HomeManagement = () => {
 
   const handleSectionSave = async (section) => {
     setSaving(true);
+    
+    // File size validation (1MB)
+    const MAX_SIZE = 1024 * 1024;
+    let hasError = false;
+
+    if (section === "education" && files.educationBackgroundImage && files.educationBackgroundImage.size > MAX_SIZE) {
+      toast.error("Education background image must be less than 1 MB");
+      hasError = true;
+    } else if (section === "volunteer" && files.volunteerImage && files.volunteerImage.size > MAX_SIZE) {
+      toast.error("Volunteer image must be less than 1 MB");
+      hasError = true;
+    } else if (section === "donation" && files.donationImage && files.donationImage.size > MAX_SIZE) {
+      toast.error("Donation QR image must be less than 1 MB");
+      hasError = true;
+    } else if (section === "flagshipPrograms") {
+      Object.keys(files.programImages).forEach((index) => {
+        if (files.programImages[index].size > MAX_SIZE) {
+          toast.error(`Program image ${parseInt(index) + 1} must be less than 1 MB`);
+          hasError = true;
+        }
+      });
+    }
+
+    if (hasError) {
+      setSaving(false);
+      return;
+    }
+
     const formData = new FormData();
     
     // Add text data for the specific section
@@ -190,7 +218,8 @@ const HomeManagement = () => {
       }
     } catch (error) {
       console.error(`Error updating ${section}`, error);
-      toast.error(`Error updating ${section}`);
+      const errorMessage = error.response?.data?.message || `Error updating ${section}`;
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -364,11 +393,12 @@ const HomeManagement = () => {
                     />
                     <div className="flex flex-col items-center">
                       <FaCloudUploadAlt className="text-3xl text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-gray-600 mb-1">
                         {files.educationBackgroundImage
                           ? files.educationBackgroundImage.name
                           : "Change Background Image"}
                       </span>
+                      <span className="text-xs text-red-500 font-semibold">Upload image less than 1 MB</span>
                     </div>
                   </div>
                   {homeData.education.backgroundImage &&
@@ -526,6 +556,7 @@ const HomeManagement = () => {
                                     ? files.programImages[index].name
                                     : "Upload Program Image"}
                                 </span>
+                                <span className="text-xs text-red-500 font-semibold mt-1">Upload image less than 1 MB</span>
                               </div>
                             </div>
                           </div>
@@ -628,11 +659,12 @@ const HomeManagement = () => {
                       />
                       <div className="flex flex-col items-center">
                         <FaCloudUploadAlt className="text-3xl text-gray-400 mb-2" />
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-600 mb-1">
                           {files.volunteerImage
                             ? files.volunteerImage.name
                             : "Change Volunteer Image"}
                         </span>
+                        <span className="text-xs text-red-500 font-semibold">Upload image less than 1 MB</span>
                       </div>
                     </div>
                     {homeData.volunteer.image && !files.volunteerImage && !deletions.volunteer && (
@@ -857,11 +889,12 @@ const HomeManagement = () => {
                       />
                       <div className="flex flex-col items-center">
                         <FaCloudUploadAlt className="text-3xl text-gray-400 mb-2" />
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-600 mb-1">
                           {files.donationImage
                             ? files.donationImage.name
                             : "Change Donation QR"}
                         </span>
+                        <span className="text-xs text-red-500 font-semibold">Upload image less than 1 MB</span>
                       </div>
                     </div>
                     {homeData.donation.image && !files.donationImage && !deletions.donation && (
