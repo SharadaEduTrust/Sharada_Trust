@@ -28,6 +28,7 @@ import BlogList from "./pages/BlogList";
 import BlogDetail from "./pages/BlogDetail";
 import ScrollToTop from "./components/common/ScrollToTop";
 import TawkToChat from "./components/common/TawkToChat";
+import CanonicalHandler from "./components/common/CanonicalHandler";
 
 const PublicLayout = () => {
   return (
@@ -42,6 +43,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <CanonicalHandler />
       <div className="App">
         <Routes>
           {/* --- ADMIN ROUTES --- */}
